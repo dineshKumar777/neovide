@@ -72,7 +72,7 @@ jobs:
       - name: Setup Reviewdog
         uses: reviewdog/action-setup@v1.3.0
         with:
-          reviewdog_version: v0.17.5
+          reviewdog_version: v0.17.4
 
         
       - name: Install Cargo Binstall

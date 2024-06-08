@@ -476,6 +476,16 @@ endif
     -- Put anything you want to happen only in Neovide here
 end
 </code></pre>
+<p>You can also query the version with:</p>
+<pre><code class="language-vim">echo g:neovide_version
+</code></pre>
+<p>Lua:</p>
+<pre><code class="language-lua">vim.print(vim.g.neovide_version)
+</code></pre>
+<p>Or inspect the more detailed channel information:</p>
+<p>Lua:</p>
+<pre><code class="language-lua">lua vim.print(vim.api.nvim_get_chan_info(vim.g.neovide_channel_id))
+</code></pre>
 <h3 id="display"><a class="header" href="#display">Display</a></h3>
 <h4 id="font"><a class="header" href="#font">Font</a></h4>
 <p>VimScript:</p>
@@ -681,6 +691,15 @@ to that value.</p>
 </code></pre>
 <p>Draw a grey border around opaque windows only.</p>
 <p>Default: <code>false</code></p>
+<h4 id="position-animation-length"><a class="header" href="#position-animation-length">Position Animation Length</a></h4>
+<p>VimScript:</p>
+<pre><code class="language-vim">let g:neovide_position_animation_length = 0.15
+</code></pre>
+<p>Lua:</p>
+<pre><code class="language-lua">vim.g.neovide_position_animation_length = 0.15
+</code></pre>
+<p>Determines the time it takes for a window to complete animation from one position to another
+position in seconds, such as <code>:split</code>. Set to <code>0</code> to disable.</p>
 <h4 id="scroll-animation-length"><a class="header" href="#scroll-animation-length">Scroll Animation Length</a></h4>
 <p>VimScript:</p>
 <pre><code class="language-vim">let g:neovide_scroll_animation_length = 0.3
@@ -736,6 +755,17 @@ clipped by the line of text below.</p>
 <p>Set the <a href="https://neovim.io/doc/user/options.html#&#x27;background&#x27;"><code>background</code></a> option when Neovide
 starts. Possible values: <em>light</em>, <em>dark</em>, <em>auto</em>. On systems that support it, <em>auto</em> will mirror the
 system theme, and will update <code>background</code> when the system theme changes.</p>
+<h4 id="layer-grouping"><a class="header" href="#layer-grouping">Layer grouping</a></h4>
+<p>VimScript:</p>
+<pre><code class="language-vim">let g:experimental_layer_grouping = v:false
+</code></pre>
+<p>Lua:</p>
+<pre><code class="language-lua">vim.g.experimental_layer_grouping = false
+</code></pre>
+<p><strong>Available since 0.13.1.</strong></p>
+<p>Group non-emtpy consecutive layers (zindex) together, so that the shadows and blurring is done for
+the whole group instead of each individual layer. This can get rid of some shadowing and blending
+artifacts, but cause worse problems like <a href="https://github.com/neovide/neovide/issues/2574">#2574</a>.</p>
 <h3 id="functionality"><a class="header" href="#functionality">Functionality</a></h3>
 <h4 id="refresh-rate"><a class="header" href="#refresh-rate">Refresh Rate</a></h4>
 <p>VimScript:</p>
@@ -1241,16 +1271,22 @@ by command line arguments.</li>
 </div>
 <h2 id="available-settings"><a class="header" href="#available-settings">Available settings</a></h2>
 <p>Settings currently available in the config file with default values:</p>
-<pre><code class="language-toml">wsl = false
-no-multigrid = false
-vsync = true
-maximized = false
-srgb = false
-idle = true
-neovim-bin = &quot;/usr/bin/nvim&quot; # in reality found dynamically on $PATH if unset
+<pre><code class="language-toml">[font]
+    normal = [] # Will use the bundled Fira Code Nerd Font by default
+    size = 14.0
+
+fork = false
 frame = &quot;full&quot;
-title-hidden = true
+idle = true
+maximized = false
+neovim-bin = &quot;/usr/bin/nvim&quot; # in reality found dynamically on $PATH if unset
+no-multigrid = false
+srgb = false
 tabs = true
+theme = &quot;auto&quot;
+title-hidden = true
+vsync = true
+wsl = false
 </code></pre>
 <p>Settings from environment variables can be found in <a href="command-line-reference.html">Command Line Reference</a>,
 see that doc for details on what those settings do.</p>
@@ -1323,7 +1359,7 @@ that, however, is only possible as far as reasonably debuggable.</p>
 your own responsibility.</em></p>
 <h2 id="jrnl"><a class="header" href="#jrnl"><a href="https://github.com/jrnl-org/jrnl">jrnl</a></a></h2>
 <p>In your configuration file:</p>
-<pre><code class="language-yaml">editor: &quot;neovide --no-fork&quot;
+<pre><code class="language-yaml">editor: &quot;neovide&quot;
 </code></pre>
 <p>...as <code>jrnl</code> saves &amp; removes the temporary file as soon as the main process exits, which happens
 before startup by <a href="https://en.wikipedia.org/wiki/Fork_(system_call)">forking</a>.</p>
@@ -1421,7 +1457,7 @@ commands in another terminal. If you have built Neovide with commands in step 3,
 be very fast. If not, it will build Neovide first. You have to specify
 <code>--profile profiling</code> and <code>--features profiling</code> here, too.</p>
 <pre><code class="language-sh">cd [neovide-source-dir]
-cargo run --profile profiling --features profiling -- --no-fork [neovide-arguments...]
+cargo run --profile profiling --features profiling -- [neovide-arguments...]
 </code></pre>
 <p>Now do whatever leads to performance issue in Neovide and exit.</p>
 </li>

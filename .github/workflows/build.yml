@@ -68,7 +68,10 @@ jobs:
         uses: rhysd/action-setup-vim@v1
         with:
           neovim: true
-
+      
+      - name: Setup Reviewdog
+        uses: reviewdog/action-setup@v1
+        
       - name: Install Cargo Binstall
         uses: cargo-bins/cargo-binstall@main
 
@@ -96,12 +99,6 @@ jobs:
 
       - name: Install Sarif
         run: cargo binstall -y clippy-sarif sarif-fmt
-
-      - name: Setup Reviewdog
-        uses: reviewdog/action-setup@v1
-        with:
-          reviewdog_version: v0.17.5
-      - run: reviewdog -version
 
       - name: Run Clippy
         run: cargo clippy --all-targets --message-format=json | clippy-sarif | tee clippy.sarif | sarif-fmt
